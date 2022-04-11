@@ -45,15 +45,18 @@
 
                             <div class="grid grid-rows-2 gap-6">
 
-                                <div class="mt-3 mb-5">
+{{--                                <div class="mt-3 mb-5">--}}
 {{--                                <strong>Profile Picture</strong>--}}
-                                </div>
-                                <div class="text-center">
+{{--                                </div>--}}
+                                <div class="text-center ml-12">
                                     <a href="storage/{{ $picture->picture }}" target="_blank">
                                         {{--                                    style="width:600px; height: 400px"--}}
-                                        <div class="" > <img src="storage/{{ $picture->picture }}"  class="" alt="Profile picture"></div>
-                                    </a></div>
-                                <div class="mt-3 text-center">
+                                        <div class="" style="width:500px; height: 500px" >
+                                            <img src="storage/{{ $picture->picture }}"  alt="Profile picture">
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class="mt-3 text-end">
                                     <a href="/mypictures"> <button class="btn btn-primary btn-sm" type="submit" >View all pictures</button></a>
                                 </div>
 

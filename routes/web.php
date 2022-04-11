@@ -38,10 +38,12 @@ Route::get('/mypictures', [ProfileController::class, 'mypictures'])->middleware(
 Route::post('/mypictures/upload', [ProfileController::class, 'uploadPicture'])->middleware('auth')->name('uploadPicture');
 Route::get('/mypictures/{id}/profile', [ProfileController::class, 'profilePicture'])->middleware('auth')->name('profilePicture');
 
-Route::get('/mypictures/searchrange', [ProfileController::class, 'searchRange'])->middleware('auth')->name('searchRange');
-Route::post('/mypictures/searchrange', [ProfileController::class, 'searchRangeUpdate'])->middleware('auth')->name('searchRangeUpdate');
+Route::get('/profile/searchrange', [ProfileController::class, 'searchRange'])->middleware('auth')->name('searchRange');
+Route::post('/profile/searchrange', [ProfileController::class, 'searchRangeUpdate'])->middleware('auth')->name('searchRangeUpdate');
 
 Route::get('/findmypartner', [MatchingController::class , 'index'])->middleware('auth')->name('findMatch');
+Route::get('/findmypartner/{id}/no', [MatchingController::class , 'declined'])->middleware('auth');
+Route::get('/findmypartner/{id}/yes', [MatchingController::class , 'accepted'])->middleware('auth');
 
 
 

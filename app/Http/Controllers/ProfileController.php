@@ -7,6 +7,7 @@ use App\Models\UserPicture;
 use App\Models\UserProfile;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Intervention\Image\ImageManagerStatic;
 
 class ProfileController extends Controller
 {
@@ -77,6 +78,7 @@ class ProfileController extends Controller
 //
 //        }
 
+
         return view ('mypicture',['pictures' => $userPictures, 'profilePicture'=>$profilePicture]);
     }
 
@@ -86,7 +88,13 @@ class ProfileController extends Controller
             'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
         ]);
 
+
         $path = $request->file('image')->store('images',['disk'=>'public']);
+//
+//
+
+//        $picture = ImageManagerStatic::make($image)->resize(400,400);
+
 
         $userPicture = UserPicture::create([
             'user_id' => auth()->id(),

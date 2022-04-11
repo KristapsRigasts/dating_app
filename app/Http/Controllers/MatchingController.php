@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\UserPicture;
 use App\Models\UserProfile;
+use App\Models\UserStatus;
 use Illuminate\Support\Facades\DB;
 
 class MatchingController extends Controller
@@ -33,13 +34,11 @@ class MatchingController extends Controller
             {
                 $correctUserId[] = $ageData->user_id;
             }
-
         }
 
         $userGenderRange = DB::table('user_profiles')
             ->where('gender', $userRange->gender)
             ->get();
-
 
         if($userGenderRange->isNotEmpty())
         {
@@ -74,20 +73,62 @@ class MatchingController extends Controller
             {
                 $usersToChooseFrom[] = $userForMatch->user_id;
             }
+            $randomUserId = $usersToChooseFrom[array_rand($usersToChooseFrom)];
+
+            $randomUser = UserProfile::where('user_id',$randomUserId )->first();
+
+            $profilePicture = UserPicture::where('id',$randomUser->profile_picture_id)->first();
+
+            return view('findmatch',['user' => $randomUser, 'picture' => $profilePicture ]);
+        }
+        else{
+            return view('notinrange');
 
         }
 
-        $randomUserId = $usersToChooseFrom[array_rand($usersToChooseFrom)];
+
+    }
+
+    public function declined($id)
+    {
+        UserStatus::create([
+            'user_id' => auth()->id(),
+            'interacted_user_id' => $id,
+            'status' => 'no'
+        ]);
+
+        return redirect('/findmypartner');
+    }
+
+    public function accepted($id)
+    {
+        UserStatus::create([
+            'user_id' => auth()->id(),
+            'interacted_user_id' => $id,
+            'status' => 'yes'
+        ]);
+
+        $matchesQuery = UserStatus::where('interacted_user_id', auth()->id())->where('status', 'yes')->get();
+
+        $matches = [];
+
+        foreach($matchesQuery as $data)
+        {
+            $matches[] = $data->user_id;
+        }
+
+        if(!in_array($id, $matches))
+        {
+            return redirect('/findmypartner');
 
 
-        $randomUser = UserProfile::where('user_id',$randomUserId )->first();
+        } else{
+            $matchUser = UserProfile::where('user_id',$id )->first();
 
-        $profilePicture = UserPicture::where('id',$randomUser->profile_picture_id)->first();
+            $profilePicture = UserPicture::where('id',$matchUser->profile_picture_id)->first();
 
-//check if profile has picture if no give blank picture
+            return view('match',['user' => $matchUser, 'picture' => $profilePicture ]);
+        }
 
-
-
-        return view('findmatch',['user' => $randomUser, 'picture' => $profilePicture ]);
     }
 }
