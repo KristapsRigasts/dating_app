@@ -22,7 +22,7 @@
                                 <div class="ml-12">
 {{--                                    <a href="/storage/{{ $picture->picture }}" target="_blank">--}}
                                         {{--                                    style="width:600px; height: 400px"--}}
-                                        <div class="" style="width:500px; height: 500px" > <img src="/storage/{{ $picture->picture }}"  alt="Profile picture"></div>
+                                        <div class="mx-auto d-block" style="width:500px; height: 500px" > <img src="/storage/{{ $picture->picture }}"  alt="Profile picture"></div>
 {{--                                    </a>--}}
                                 </div>
                                 <a href="/userprofile/{{ $user->user_id }}" target="_blank">
@@ -62,8 +62,8 @@
                             </div>
 
                             <div class="mt-3 text-center">
-                                <a href="/findmypartner/{{ $user->user_id }}/no"> <button class="btn btn-danger btn-lg" type="submit" >No</button></a>
-                                <a href="/findmypartner/{{ $user->user_id }}/yes"> <button class="btn btn-success btn-lg" type="submit" >Yes </button></a>
+                           <span class="prev"><a href="/findmypartner/{{ $user->user_id }}/no"> <button class="btn btn-danger btn-lg" type="submit" >No</button></a></span>
+                                <span class="next"><a href="/findmypartner/{{ $user->user_id }}/yes"> <button class="btn btn-success btn-lg" type="submit" >Yes </button></a></span>
                             </div>
 
 
@@ -78,3 +78,14 @@
 
 
 </x-app-layout>
+<script>
+    $(document).keydown(function(e){
+        if (e.keyCode == 37) {
+            e.preventDefault();
+            window.location.href = $(".prev > a").attr("href");
+        } else if (e.keyCode == 39) {
+            e.preventDefault();
+            window.location.href = $(".next > a").attr("href");
+        }
+    });
+</script>

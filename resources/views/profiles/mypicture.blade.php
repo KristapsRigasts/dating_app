@@ -57,7 +57,7 @@
                                 <div>
                                     <x-label for="image" :value="__('Add picture')" />
 
-                                    <x-input id="image" class="block mt-1 w-full" type="file" name="image" :value="old('image')" required autofocus />
+                                    <x-input id="image" class="block mt-1 w-full" type="file" name="image[]" :value="old('image')" required autofocus multiple/>
                                 </div>
 
                                 <x-button class="mt-2 ">

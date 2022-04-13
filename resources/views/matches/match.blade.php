@@ -15,12 +15,12 @@
 
                         <div class="grid grid-rows-2 gap-6">
                             <div class="mt-2  text-center">
-                                <h1>You got a match!! </h1>
+                                <h1 class="text-danger">You got a match!! </h1>
 
                                 <div class="text-center ml-12">
                                     <a href="/storage/{{ $picture->picture }}" target="_blank">
                                         {{--                                    style="width:600px; height: 400px"--}}
-                                        <div  class="text-center" style="width:500px; height: 500px" > <img src="/storage/{{ $picture->picture }}"  class="" alt="Profile picture"></div>
+                                        <div  class="mx-auto d-block" style="width:500px; height: 500px" > <img src="/storage/{{ $picture->picture }}"  class="" alt="Profile picture"></div>
                                     </a></div>
                                 <div class="mt-2">
                                     <h2>{{$user->name }} {{ $user->surname }} ({{ $user->age }}) </h2>
@@ -57,3 +57,8 @@
 
 
 </x-app-layout>
+<script>
+    setTimeout(function () {
+        window.location.href = 'http://localhost/findmypartner';
+    },1000);
+</script>

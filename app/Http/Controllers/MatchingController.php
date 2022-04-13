@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Jobs\UserMatchEmailJob;
+use App\Models\SearchRange;
 use App\Models\User;
 use App\Models\UserPicture;
 use App\Models\UserProfile;
@@ -13,9 +14,10 @@ class MatchingController extends Controller
 {
     public function index()
     {
-        $userRange = DB::table('search_ranges')
-            ->where('user_id',auth()->id())
-            ->first();
+        $userRange = SearchRange::where('user_id',auth()->id())->first();
+//            DB::table('search_ranges')
+//            ->where('user_id',auth()->id())
+//            ->first();
 
         //jaatrod profili kuri nav age, gender range!
         // jaatrod profili ar kuriem ir jau interaktots
@@ -26,9 +28,10 @@ class MatchingController extends Controller
 
         $correctUserId[] = auth()->id();
 
-        $userAgeRange = DB::table('user_profiles')
-            ->whereNotBetween('age',[$userRange->age_from,$userRange->age_till])
-            ->get();
+        $userAgeRange = UserProfile::whereNotBetween('age',[$userRange->age_from,$userRange->age_till])->get();
+//            DB::table('user_profiles')
+//            ->whereNotBetween('age',[$userRange->age_from,$userRange->age_till])
+//            ->get();
 
         if($userAgeRange->isNotEmpty())
         {
@@ -38,9 +41,10 @@ class MatchingController extends Controller
             }
         }
 
-        $userGenderRange = DB::table('user_profiles')
-            ->where('gender', $userRange->gender)
-            ->get();
+        $userGenderRange = UserProfile::where('gender', $userRange->gender)->get();
+//            DB::table('user_profiles')
+//            ->where('gender', $userRange->gender)
+//            ->get();
 
         if($userGenderRange->isNotEmpty())
         {
@@ -50,9 +54,10 @@ class MatchingController extends Controller
             }
         }
 
-        $userAlreadyInteracted = DB::table('user_statuses')
-            ->where('user_id', auth()->id())
-            ->get();
+        $userAlreadyInteracted = UserStatus::where('user_id', auth()->id())->get();
+//            DB::table('user_statuses')
+//            ->where('user_id', auth()->id())
+//            ->get();
 
         if($userAlreadyInteracted->isNotEmpty())
         {
@@ -62,9 +67,10 @@ class MatchingController extends Controller
             }
         }
 
-        $usersForMatch = DB::table('user_profiles')
-            ->whereNotIn('user_id',$correctUserId)
-            ->get('user_id');
+        $usersForMatch = UserProfile::whereNotIn('user_id',$correctUserId)->get('user_id');
+//            DB::table('user_profiles')
+//            ->whereNotIn('user_id',$correctUserId)
+//            ->get('user_id');
 
 
         $usersToChooseFrom = [];
@@ -81,13 +87,11 @@ class MatchingController extends Controller
 
             $profilePicture = UserPicture::where('id',$randomUser->profile_picture_id)->first();
 
-            return view('findmatch',['user' => $randomUser, 'picture' => $profilePicture ]);
+            return view('matches.findmatch',['user' => $randomUser, 'picture' => $profilePicture ]);
         }
         else{
-            return view('notinrange');
-
+            return view('matches.notinrange');
         }
-
 
     }
 
@@ -134,14 +138,13 @@ class MatchingController extends Controller
 
             $profilePicture = UserPicture::where('id',$matchUser->profile_picture_id)->first();
 
-            return view('match',['user' => $matchUser, 'picture' => $profilePicture ]);
+            return view('matches.match',['user' => $matchUser, 'picture' => $profilePicture ]);
         }
 
     }
 
     public function userMatches()
     {
-
         $matchesUserId = [];
 
         $usersThatLiked =[];
@@ -158,7 +161,7 @@ class MatchingController extends Controller
 //var_dump($usersThatLiked);die;
         $likedUsers = [];
 
-        $userLiked = UserStatus::select("*")->where('user_id',auth()->id())->where('status', 'yes')->orderBy('created_at','desc')->get();
+        $userLiked = UserStatus::where('user_id',auth()->id())->where('status', 'yes')->orderBy('created_at','desc')->get();
         foreach ($userLiked as $userData)
         {
             if(in_array($userData->interacted_user_id,$usersThatLiked))
@@ -167,10 +170,13 @@ class MatchingController extends Controller
             }
         }
 
-        $matchedUsers = UserProfile::whereIn('user_id', $matchesUserId)->get();
+        $matchedUsers = UserProfile::with('pictures')->whereIn('user_id', $matchesUserId)->get();
+//        $matchedUserss=UserProfile::with('pictures')->find(1);
+////        var_dump($matchedUserss);die;
+//        var_dump($matchedUsers[0]->pictures);die;
 
 
-        return view('mymatches',['users' => $matchedUsers]);
+        return view('matches.mymatches',['users' => $matchedUsers]);
 
     }
 }

@@ -36,7 +36,7 @@
                     <x-slot name="content">
                         <x-dropdown-link :href="route('profile')"
                                          >
-                            {{ __('Profile') }}
+                            {{ __('My Profile') }}
                         </x-dropdown-link>
                         <x-dropdown-link :href="route('myPictures')"
                         >
@@ -96,7 +96,7 @@
             <div class="mt-3 space-y-1">
 
                 <x-responsive-nav-link :href="route('profile')">
-                    {{ __('Profile') }}
+                    {{ __('My Profile') }}
                 </x-responsive-nav-link>
                 <x-responsive-nav-link :href="route('myPictures')">
                     {{ __('My Pictures') }}

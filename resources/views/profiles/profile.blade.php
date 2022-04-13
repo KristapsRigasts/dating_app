@@ -48,11 +48,11 @@
 {{--                                <div class="mt-3 mb-5">--}}
 {{--                                <strong>Profile Picture</strong>--}}
 {{--                                </div>--}}
-                                <div class="text-center ml-12">
+                                <div class="items-center ml-12">
                                     <a href="storage/{{ $picture->picture }}" target="_blank">
                                         {{--                                    style="width:600px; height: 400px"--}}
-                                        <div class="" style="width:500px; height: 500px" >
-                                            <img src="storage/{{ $picture->picture }}"  alt="Profile picture">
+                                        <div class="mx-auto d-block" style="width:500px; height: 500px" >
+                                            <img src="/storage/{{ $picture->picture }}"  alt="Profile picture">
                                         </div>
                                     </a>
                                 </div>

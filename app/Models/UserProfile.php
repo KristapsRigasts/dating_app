@@ -20,4 +20,9 @@ class UserProfile extends Model
         'profile_picture_id',
     ];
 
+    public function pictures()
+    {
+        return $this->hasMany(UserPicture::class,'user_id');
+    }
+
 }
