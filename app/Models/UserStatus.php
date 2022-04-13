@@ -14,4 +14,5 @@ class UserStatus extends Model
         'interacted_user_id',
         'status'
     ];
+
 }

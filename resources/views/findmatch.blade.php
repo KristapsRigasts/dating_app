@@ -25,9 +25,11 @@
                                         <div class="" style="width:500px; height: 500px" > <img src="/storage/{{ $picture->picture }}"  alt="Profile picture"></div>
 {{--                                    </a>--}}
                                 </div>
+                                <a href="/userprofile/{{ $user->user_id }}" target="_blank">
                                 <div class="mt-2">
                                 <h2>{{$user->name }} {{ $user->surname }} ({{ $user->age }}) </h2>
                                 </div>
+                                </a>
                                 <div class="mt-1 ">
                                     ({{ $user->gender }})
                                 </div>

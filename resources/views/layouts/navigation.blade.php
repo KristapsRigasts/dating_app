@@ -4,16 +4,16 @@
         <div class="flex justify-between h-16">
             <div class="flex">
                 <!-- Logo -->
-                <div class="shrink-0 flex items-center">
-                    <a href="{{ route('dashboard') }}">
-                        <x-application-logo class="block h-10 w-auto fill-current text-gray-600" />
-                    </a>
-                </div>
+{{--                <div class="shrink-0 flex items-center">--}}
+{{--                    <a href="{{ route('dashboard') }}">--}}
+{{--                        <x-application-logo class="block h-10 w-auto fill-current text-gray-600" />--}}
+{{--                    </a>--}}
+{{--                </div>--}}
 
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                        {{ __('Dashboard') }}
+                    <x-nav-link :href="route('findMatch')" :active="request()->routeIs('dashboard')">
+                        {{ __('Find a partner') }}
                     </x-nav-link>
                 </div>
             </div>
@@ -46,10 +46,12 @@
                         >
                             {{ __('Search Range') }}
                         </x-dropdown-link>
-                        <x-dropdown-link :href="route('findMatch')"
-                        >
+                        <x-responsive-nav-link :href="route('findMatch')">
                             {{ __('Find Your Match') }}
-                        </x-dropdown-link>
+                        </x-responsive-nav-link>
+                        <x-responsive-nav-link :href="route('matches')">
+                            {{ __('My Matches') }}
+                        </x-responsive-nav-link>
                         <!-- Authentication -->
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
@@ -104,6 +106,9 @@
                 </x-responsive-nav-link>
                 <x-responsive-nav-link :href="route('findMatch')">
                     {{ __('Find Your Match') }}
+                </x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('matches')">
+                    {{ __('My Matches') }}
                 </x-responsive-nav-link>
                 <!-- Authentication -->
                 <form method="POST" action="{{ route('logout') }}">

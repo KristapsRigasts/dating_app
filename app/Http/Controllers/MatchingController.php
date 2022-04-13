@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\UserMatchEmailJob;
+use App\Models\User;
 use App\Models\UserPicture;
 use App\Models\UserProfile;
 use App\Models\UserStatus;
@@ -89,7 +91,7 @@ class MatchingController extends Controller
 
     }
 
-    public function declined($id)
+    public function dislike($id)
     {
         UserStatus::create([
             'user_id' => auth()->id(),
@@ -100,7 +102,7 @@ class MatchingController extends Controller
         return redirect('/findmypartner');
     }
 
-    public function accepted($id)
+    public function like($id)
     {
         UserStatus::create([
             'user_id' => auth()->id(),
@@ -121,14 +123,54 @@ class MatchingController extends Controller
         {
             return redirect('/findmypartner');
 
-
         } else{
+
+            $userEmail =User::where('id', auth()->id())->first();
+
+            $matchUserEmail = User::where('id', $id)->first();
+            $this->dispatch(new UserMatchEmailJob($userEmail->email, $matchUserEmail->email));
+
             $matchUser = UserProfile::where('user_id',$id )->first();
 
             $profilePicture = UserPicture::where('id',$matchUser->profile_picture_id)->first();
 
             return view('match',['user' => $matchUser, 'picture' => $profilePicture ]);
         }
+
+    }
+
+    public function userMatches()
+    {
+
+        $matchesUserId = [];
+
+        $usersThatLiked =[];
+
+        $userWasLiked = UserStatus::where('interacted_user_id',auth()->id())->where('status', 'yes')->get();
+
+        foreach ($userWasLiked as $userLikedData)
+        {
+//            if(in_array($userLikedData->user_id,$likedUsers)) {
+
+            $usersThatLiked [] = $userLikedData->user_id;
+//            }
+        }
+//var_dump($usersThatLiked);die;
+        $likedUsers = [];
+
+        $userLiked = UserStatus::select("*")->where('user_id',auth()->id())->where('status', 'yes')->orderBy('created_at','desc')->get();
+        foreach ($userLiked as $userData)
+        {
+            if(in_array($userData->interacted_user_id,$usersThatLiked))
+            {
+                $matchesUserId[] = $userData->interacted_user_id;
+            }
+        }
+
+        $matchedUsers = UserProfile::whereIn('user_id', $matchesUserId)->get();
+
+
+        return view('mymatches',['users' => $matchedUsers]);
 
     }
 }

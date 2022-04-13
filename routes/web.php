@@ -24,10 +24,10 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth'])->name('dashboard');
 
-
 require __DIR__.'/auth.php';
 
 Route::get('/profile', [ProfileController::class, 'profile'])->middleware('auth')->name('profile');
+Route::get('/userprofile/{id}', [ProfileController::class, 'show'])->middleware('auth');
 
 Route::get('/myprofile', [ProfileController::class, 'myProfile'])->middleware('auth')->name('myProfile');
 
@@ -41,10 +41,11 @@ Route::get('/mypictures/{id}/profile', [ProfileController::class, 'profilePictur
 Route::get('/profile/searchrange', [ProfileController::class, 'searchRange'])->middleware('auth')->name('searchRange');
 Route::post('/profile/searchrange', [ProfileController::class, 'searchRangeUpdate'])->middleware('auth')->name('searchRangeUpdate');
 
-Route::get('/findmypartner', [MatchingController::class , 'index'])->middleware('auth')->name('findMatch');
-Route::get('/findmypartner/{id}/no', [MatchingController::class , 'declined'])->middleware('auth');
-Route::get('/findmypartner/{id}/yes', [MatchingController::class , 'accepted'])->middleware('auth');
+Route::get('/myprofile/matches', [MatchingController::class, 'userMatches'])->middleware('auth')->name('matches');
 
+Route::get('/findmypartner', [MatchingController::class , 'index'])->middleware('auth')->name('findMatch');
+Route::get('/findmypartner/{id}/no', [MatchingController::class , 'dislike'])->middleware('auth');
+Route::get('/findmypartner/{id}/yes', [MatchingController::class , 'like'])->middleware('auth');
 
 
 //Route::get('say',[HelloController::class,'say']);

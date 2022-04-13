@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\SearchRange;
+use App\Models\User;
 use App\Models\UserPicture;
 use App\Models\UserProfile;
+use App\Models\UserStatus;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Intervention\Image\ImageManagerStatic;
@@ -13,13 +15,13 @@ class ProfileController extends Controller
 {
     public function profile()
     {
+
         $userId =auth()->id();
         $user = UserProfile::where('user_id',$userId)->first();
 
         $profilePicture = UserPicture::where('id',$user->profile_picture_id)->first();
 
         return view ('profile',['user' => $user, 'picture' => $profilePicture]);
-
     }
 
     public function myProfile()
@@ -101,6 +103,9 @@ class ProfileController extends Controller
             'picture' => $path,
         ]);
 
+
+        UserStatus::where('interacted_user_id',auth()->id())->where('status', 'no')->delete();
+
 //        UserProfile::where('user_id', auth()->id())
 //            ->update([
 //                'profile_picture_id' => $userPicture->id
@@ -150,6 +155,18 @@ class ProfileController extends Controller
 
         return redirect('/profile');
     }
+
+    public function show($id)
+    {
+        $user = UserProfile::where('user_id',$id)->first();
+
+        $pictures = UserPicture::where('user_id',$id)->get();
+
+
+        return view ('userprofile',['user' => $user, 'pictures' => $pictures]);
+    }
+
+
 
 //    public function deletePicture($id)
 //    {
