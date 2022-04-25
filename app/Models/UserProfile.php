@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class UserProfile extends Model
 {
@@ -20,7 +21,7 @@ class UserProfile extends Model
         'profile_picture_id',
     ];
 
-    public function pictures()
+    public function pictures(): HasMany
     {
         return $this->hasMany(UserPicture::class,'user_id');
     }

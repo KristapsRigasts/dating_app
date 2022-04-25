@@ -3,17 +3,20 @@
 namespace App\Http\Controllers;
 
 use App\Models\SearchRange;
-use App\Models\User;
+
 use App\Models\UserPicture;
 use App\Models\UserProfile;
 use App\Models\UserStatus;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Intervention\Image\ImageManagerStatic;
+use Illuminate\Routing\Redirector;
 
 class ProfileController extends Controller
 {
-    public function profile()
+    public function profile(): View|Factory|Application
     {
 
         $userId =auth()->id();
@@ -24,7 +27,7 @@ class ProfileController extends Controller
         return view ('profiles.profile',['user' => $user, 'picture' => $profilePicture]);
     }
 
-    public function myProfile()
+    public function myProfile(): View|Factory|Application
     {
         $userId =auth()->id();
         $user = UserProfile::where('user_id',$userId)->first();
@@ -33,7 +36,7 @@ class ProfileController extends Controller
     }
 
 
-    public function updateProfile(Request $request)
+    public function updateProfile(Request $request): Redirector|RedirectResponse|Application
     {
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
@@ -56,7 +59,7 @@ class ProfileController extends Controller
         return redirect('/profile');
     }
 
-    public function myPictures()
+    public function myPictures(): View|Factory|Application
     {
         $userPictures = UserPicture::where('user_id',auth()->id())->get();
 
@@ -64,19 +67,10 @@ class ProfileController extends Controller
 
         $profilePicture = UserPicture::where('id',$profilePictureId->profile_picture_id)->first();
 
-//        $pictures =[];
-//
-//        foreach($userPictures as $picture)
-//        {
-//            $pictures[] = 'storage/' . $picture->picture;
-//
-//        }
-
-
         return view ('profiles.mypicture',['pictures' => $userPictures, 'profilePicture'=>$profilePicture]);
     }
 
-    public function uploadPicture(Request $request)
+    public function uploadPicture(Request $request): Redirector|RedirectResponse|Application
     {
 
         if($request->has('image'))
@@ -91,28 +85,13 @@ class ProfileController extends Controller
             }
         }
 
-//        $request->validate([
-//            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
-//        ]);
-//
-//        $path = $request->file('image')->store('images',['disk'=>'public']);
-////
-////        $picture = ImageManagerStatic::make($image)->resize(400,400);
-//
-//        $userPicture = UserPicture::create([
-//            'user_id' => auth()->id(),
-//            'picture' => $path,
-//        ]);
-//
-//
         UserStatus::where('interacted_user_id',auth()->id())->where('status', 'no')->delete();
 
         return redirect('/mypictures');
     }
 
-    public function profilePicture($id)
+    public function profilePicture($id): Redirector|RedirectResponse|Application
     {
-
         UserProfile::where('user_id', auth()->id())
             ->update([
                 'profile_picture_id' => $id
@@ -121,7 +100,7 @@ class ProfileController extends Controller
         return redirect('/profile');
     }
 
-    public function searchRange()
+    public function searchRange(): View|Factory|Application
     {
         $userSearchRange = SearchRange::where('user_id',auth()->id())->first();
 
@@ -130,19 +109,6 @@ class ProfileController extends Controller
 
     public function searchRangeUpdate(Request $request)
     {
-
-//        $request->validate([
-//            'ageFrom' => ['required', 'integer', "gte:18"],
-//            'ageTill' => ['required', 'integer', "gte:18"],
-//        ]);
-//
-//        $ageTill = $request->ageTill;
-//
-//        if($ageTill < $request->ageFrom)
-//        {
-//            $ageTill = 100;
-//        }
-
         $ageFrom = (int) $request->slider1;
         $ageTill = (int) $request->slider2;
 
@@ -157,7 +123,7 @@ class ProfileController extends Controller
         return redirect('/findmypartner');
     }
 
-    public function show($id)
+    public function show($id): View|Factory|Application
     {
         $user = UserProfile::where('user_id',$id)->first();
 
@@ -165,15 +131,4 @@ class ProfileController extends Controller
 
         return view ('profiles.userprofile',['user' => $user, 'pictures' => $pictures]);
     }
-
-
-
-//    public function deletePicture($id)
-//    {
-//       $deleted = Flight::where('active', 0)->delete();
-//        var_dump($id);
-//        var_dump('here');
-//
-//    }
-
 }

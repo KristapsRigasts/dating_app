@@ -8,30 +8,24 @@ use App\Models\User;
 use App\Models\UserPicture;
 use App\Models\UserProfile;
 use App\Models\UserStatus;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Routing\Redirector;
+
 
 class MatchingController extends Controller
 {
-    public function index()
+    public function index(): View|Factory|Application
     {
         $userRange = SearchRange::where('user_id',auth()->id())->first();
-//            DB::table('search_ranges')
-//            ->where('user_id',auth()->id())
-//            ->first();
-
-        //jaatrod profili kuri nav age, gender range!
-        // jaatrod profili ar kuriem ir jau interaktots
-        //jaizsledz savu profilu!
-        //randoma viens jaizvelas
 
         $correctUserId =[];
 
         $correctUserId[] = auth()->id();
 
         $userAgeRange = UserProfile::whereNotBetween('age',[$userRange->age_from,$userRange->age_till])->get();
-//            DB::table('user_profiles')
-//            ->whereNotBetween('age',[$userRange->age_from,$userRange->age_till])
-//            ->get();
 
         if($userAgeRange->isNotEmpty())
         {
@@ -42,9 +36,6 @@ class MatchingController extends Controller
         }
 
         $userGenderRange = UserProfile::where('gender', $userRange->gender)->get();
-//            DB::table('user_profiles')
-//            ->where('gender', $userRange->gender)
-//            ->get();
 
         if($userGenderRange->isNotEmpty())
         {
@@ -55,9 +46,6 @@ class MatchingController extends Controller
         }
 
         $userAlreadyInteracted = UserStatus::where('user_id', auth()->id())->get();
-//            DB::table('user_statuses')
-//            ->where('user_id', auth()->id())
-//            ->get();
 
         if($userAlreadyInteracted->isNotEmpty())
         {
@@ -68,10 +56,6 @@ class MatchingController extends Controller
         }
 
         $usersForMatch = UserProfile::whereNotIn('user_id',$correctUserId)->get('user_id');
-//            DB::table('user_profiles')
-//            ->whereNotIn('user_id',$correctUserId)
-//            ->get('user_id');
-
 
         $usersToChooseFrom = [];
 
@@ -92,10 +76,9 @@ class MatchingController extends Controller
         else{
             return view('matches.notinrange');
         }
-
     }
 
-    public function dislike($id)
+    public function dislike($id): Redirector|RedirectResponse|Application
     {
         UserStatus::create([
             'user_id' => auth()->id(),
@@ -106,7 +89,7 @@ class MatchingController extends Controller
         return redirect('/findmypartner');
     }
 
-    public function like($id)
+    public function like($id): Factory|View|Redirector|Application|RedirectResponse
     {
         UserStatus::create([
             'user_id' => auth()->id(),
@@ -147,10 +130,9 @@ class MatchingController extends Controller
 
             return view('matches.match',['user' => $matchUser, 'picture' => $profilePicture ]);
         }
-
     }
 
-    public function userMatches()
+    public function userMatches(): View|Factory|Application
     {
         $matchesUserId = [];
 
@@ -160,13 +142,8 @@ class MatchingController extends Controller
 
         foreach ($userWasLiked as $userLikedData)
         {
-//            if(in_array($userLikedData->user_id,$likedUsers)) {
-
             $usersThatLiked [] = $userLikedData->user_id;
-//            }
         }
-//var_dump($usersThatLiked);die;
-        $likedUsers = [];
 
         $userLiked = UserStatus::where('user_id',auth()->id())->where('status', 'yes')->orderBy('created_at','desc')->get();
         foreach ($userLiked as $userData)
@@ -178,12 +155,7 @@ class MatchingController extends Controller
         }
 
         $matchedUsers = UserProfile::with('pictures')->whereIn('user_id', $matchesUserId)->get();
-//        $matchedUserss=UserProfile::with('pictures')->find(1);
-////        var_dump($matchedUserss);die;
-//        var_dump($matchedUsers[0]->pictures);die;
-
 
         return view('matches.mymatches',['users' => $matchedUsers]);
-
     }
 }

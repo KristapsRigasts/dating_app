@@ -48,11 +48,4 @@ Route::get('/findmypartner/{id}/no', [MatchingController::class , 'dislike'])->m
 Route::get('/findmypartner/{id}/yes', [MatchingController::class , 'like'])->middleware('auth');
 
 
-//Route::get('say',[HelloController::class,'say']);
-//
-//Route::get('sayhello',[HelloController::class,'sayHello']);
-//
-//Route::get('saybye',[HelloController::class,'sayBye']);
-//Route::get('/mypictures/{id}/delete', [ProfileController::class, 'deletePicture'])->middleware('auth');
-
 
