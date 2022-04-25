@@ -13,15 +13,15 @@ class MatchMail extends Mailable
 
     public $subject = 'You got a new match!';
 
-
+    public $name;
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($name)
     {
-        //
+        $this->name = $name;
 
     }
 
@@ -32,6 +32,6 @@ class MatchMail extends Mailable
      */
     public function build()
     {
-        return $this->view('mails.match');
+        return $this->view('mails.match',['name' => $this->name]);
     }
 }

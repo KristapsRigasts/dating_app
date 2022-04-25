@@ -17,6 +17,8 @@ class UserMatchEmailJob implements ShouldQueue
 
     private $userEmail;
     private $matchEmail;
+    public $activeUserName;
+    public $matchUserName;
 
 
     /**
@@ -24,12 +26,14 @@ class UserMatchEmailJob implements ShouldQueue
      *
      * @return void
      */
-    public function __construct($userEmail, $matchEmail)
+    public function __construct($userEmail, $activeUserName, $matchEmail, $matchUserName)
     {
         //
         $this->userEmail = $userEmail;
         $this->matchEmail = $matchEmail;
 
+        $this->activeUserName = $activeUserName;
+        $this->matchUserName = $matchUserName;
     }
 
     /**
@@ -39,8 +43,8 @@ class UserMatchEmailJob implements ShouldQueue
      */
     public function handle()
     {
-        Mail::to($this->userEmail)->send(new MatchMail());
+        Mail::to($this->userEmail)->send(new MatchMail($this->matchUserName));
 
-        Mail::to($this->matchEmail)->send(new MatchMail());
+        Mail::to($this->matchEmail)->send(new MatchMail($this->activeUserName));
     }
 }

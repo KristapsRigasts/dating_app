@@ -131,10 +131,17 @@ class MatchingController extends Controller
 
             $userEmail =User::where('id', auth()->id())->first();
 
+            $activeUser= UserProfile::where('user_id',auth()->id() )->first();
+
+            $activeUserName = $activeUser->name . " " . $activeUser->surname;
+
             $matchUserEmail = User::where('id', $id)->first();
-            $this->dispatch(new UserMatchEmailJob($userEmail->email, $matchUserEmail->email));
 
             $matchUser = UserProfile::where('user_id',$id )->first();
+
+            $matchUserName = $matchUser->name . " " . $matchUser->surname;
+
+            $this->dispatch(new UserMatchEmailJob($userEmail->email,$activeUserName, $matchUserEmail->email,$matchUserName));
 
             $profilePicture = UserPicture::where('id',$matchUser->profile_picture_id)->first();
 
