@@ -11,49 +11,30 @@
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 bg-white border-b border-gray-200">
                     <!-- Validation Errors -->
-                    <x-auth-validation-errors class="mb-4" :errors="$errors" />
+                    <x-auth-validation-errors class="mb-4" :errors="$errors"/>
 
-                    <form method="POST" action="{{ route('searchRangeUpdate') }}" >
+                    <form method="POST" action="{{ route('searchRangeUpdate') }}">
                         @csrf
-                        <div class ="grid grid-col-2 gap-6">
+                        <div class="grid grid-col-2 gap-6">
 
-{{--                            <div class="grid grid-rows-2 gap-6">--}}
-
-                                <!-- age from -->
-{{--                                <div>--}}
-{{--                                    <x-label for="ageFrom" :value="__('Age from')" />--}}
-
-{{--                                    <x-input id="ageFrom" class="block mt-1 w-full" type="text" name="ageFrom" value="{{ $search->age_from }}" required autofocus />--}}
-{{--                                </div>--}}
-{{--                                <!-- age till -->--}}
-{{--                                <div>--}}
-{{--                                    <x-label for="ageTill" :value="__('Age till')" />--}}
-
-{{--                                    <x-input id="ageTill" class="block mt-1 w-full" type="text" name="ageTill" value="{{ $search->age_till }}" required autofocus />--}}
-{{--                                </div>--}}
-{{--                                <!-- Gender -->--}}
-{{--                            </div>--}}
                             <div class="grid grid-rows-2 gap-6">
-
                                 <div>
-                                    {{--                    <x-label for="gender" :value="__('Gender')" />--}}
                                     <div class="mt-2 text-center">Gender</div>
-                                    {{--                    <x-input id="gender" class="block mt-1 w-full" type="radio" name="gender" :value="old('gender')" required autofocus />--}}
                                     <label for="gender">Male</label>
-                                    <x-input id="gender" class="block mt-1 w-full" type="radio" name="gender" value="female" checked/>
+                                    <x-input id="gender" class="block mt-1 w-full" type="radio" name="gender"
+                                             value="female" checked/>
                                     <label for="gender">Female</label>
-                                    <x-input id="gender" class="block mt-1 w-full" type="radio" name="gender" value="male" />
+                                    <x-input id="gender" class="block mt-1 w-full" type="radio" name="gender"
+                                             value="male"/>
                                     <label for="gender">Both gender</label>
-                                    <x-input id="gender" class="block mt-1 w-full" type="radio" name="gender" value="both" />
+                                    <x-input id="gender" class="block mt-1 w-full" type="radio" name="gender"
+                                             value="both"/>
 
                                 </div>
-
                             </div>
                             <div class="mt-4 text-center">
                                 Age from - till
                             </div>
-
-
                             <div class="wrapper mt-1 text-center">
                                 <div class="values">
                                     <span id="range1">
@@ -66,14 +47,13 @@
                                 </div>
                                 <div class="container ">
                                     <div class="slider-track"></div>
-                                    <input type="range" min="18" max="100" value="{{ $search->age_from }}" id="slider-1" name="slider1" oninput="slideOne()">
-                                    <input type="range" min="18" max="100" value="{{ $search->age_till }}" id="slider-2" name="slider2" oninput="slideTwo()">
+                                    <input type="range" min="18" max="100" value="{{ $search->age_from }}" id="slider-1"
+                                           name="slider1" oninput="slideOne()">
+                                    <input type="range" min="18" max="100" value="{{ $search->age_till }}" id="slider-2"
+                                           name="slider2" oninput="slideTwo()">
                                 </div>
                             </div>
-
-
                             <div>
-
                                 <x-button class="ml-4 mt-2 text-center">
                                     {{ __('Update') }}
                                 </x-button>
@@ -109,6 +89,7 @@
         displayValOne.textContent = sliderOne.value;
         fillColor();
     }
+
     function slideTwo() {
         if (parseInt(sliderTwo.value) - parseInt(sliderOne.value) <= minGap) {
             sliderTwo.value = parseInt(sliderOne.value) + minGap;
@@ -116,6 +97,7 @@
         displayValTwo.textContent = sliderTwo.value;
         fillColor();
     }
+
     function fillColor() {
         percent1 = (sliderOne.value / sliderMaxValue) * 100;
         percent2 = (sliderTwo.value / sliderMaxValue) * 100;
